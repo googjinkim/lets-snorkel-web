@@ -2,15 +2,16 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%A4%BF</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#F3F7F6;
-    --panel:#0C2B3A;
-    --panel-line:#1B4557;
-    --panel-text:#D9EAEE;
-    --panel-text-dim:#7FA3AF;
+    --panel:#D7E9F7;
+    --panel-line:#B9D3EA;
+    --panel-text:#14405E;
+    --panel-text-dim:#4C7597;
     --accent:#137D8C;
     --accent-strong:#0B5661;
     --text:#152229;
@@ -49,7 +50,7 @@
   .brand{
     display:flex;align-items:baseline;gap:8px;
     font-family:"Space Grotesk",sans-serif;
-    color:#fff;font-weight:700;font-size:19px;
+    color:var(--panel-text);font-weight:700;font-size:19px;
     white-space:nowrap;cursor:pointer;
     background:none;border:none;padding:0;
   }
@@ -59,11 +60,11 @@
   }
   .search-form{
     flex:1;display:flex;max-width:560px;
-    background:#0A2330;border:1px solid var(--panel-line);
+    background:#FFFFFF;border:1px solid var(--panel-line);
     border-radius:999px;overflow:hidden;
   }
   .search-form input{
-    flex:1;border:none;background:transparent;color:#fff;
+    flex:1;border:none;background:transparent;color:var(--panel-text);
     padding:10px 16px;font-size:14px;font-family:inherit;
   }
   .search-form input::placeholder{color:var(--panel-text-dim);}
@@ -83,6 +84,7 @@
     min-height:calc(100vh - 57px);
     padding:18px 0;
     position:sticky;top:57px;
+    display:flex;flex-direction:column;
   }
   .side-label{
     font-size:11px;color:var(--panel-text-dim);
@@ -94,13 +96,25 @@
     border-left:3px solid transparent;
     color:var(--panel-text);
   }
-  .side-item:hover{background:#0F3646;}
+  .side-item:hover{background:#C3DEF1;}
   .side-item.active{
     border-left-color:var(--accent);
-    background:#0F3646;
-    font-weight:500;color:#fff;
+    background:#C3DEF1;
+    font-weight:500;color:var(--panel-text);
   }
   .side-item small{color:var(--panel-text-dim);font-size:11px;}
+
+  .side-photo{
+    flex:1;min-height:120px;position:relative;overflow:hidden;
+  }
+  .side-photo img{
+    width:100%;height:100%;object-fit:cover;display:block;
+    position:absolute;inset:0;
+  }
+  .side-photo::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:36px;
+    background:linear-gradient(to bottom, var(--panel), transparent);
+  }
 
   main{flex:1;min-width:0;padding:22px 26px 60px;}
 
@@ -198,12 +212,12 @@
 
   /* ---------- mobile: hamburger + off-canvas sidebar ---------- */
   .menu-toggle{
-    display:none;background:none;border:none;color:#fff;
+    display:none;background:none;border:none;color:var(--panel-text);
     font-size:20px;line-height:1;cursor:pointer;padding:4px 6px;
   }
   .side-panel-head{
     display:none;align-items:center;justify-content:space-between;
-    padding:0 20px 14px;color:#fff;font-weight:700;font-size:15px;
+    padding:0 20px 14px;color:var(--panel-text);font-weight:700;font-size:15px;
   }
   .side-panel-head button{
     background:none;border:none;color:var(--panel-text-dim);
@@ -276,6 +290,7 @@
     <div class="side-label">동해 바다</div>
     <div class="side-item active" data-region="__ALL__">전체 <small id="allCount"></small></div>
     <div id="regionList"></div>
+    <div class="side-photo"><img src="assets/diving.jpg" alt=""></div>
   </aside>
 
   <main id="main">
