@@ -88,14 +88,16 @@
   }
   .side-group-header{
     width:100%;display:flex;align-items:center;justify-content:space-between;
-    padding:11px 20px 7px;font-size:12px;color:var(--panel-text-dim);
-    letter-spacing:.02em;background:none;border:none;cursor:pointer;
-    font-family:inherit;
+    padding:9px 12px 9px 20px;font-size:13px;font-weight:500;
+    color:var(--panel-text);letter-spacing:.02em;
+    background:none;border:none;cursor:pointer;font-family:inherit;
   }
-  .side-group-header .chev{
-    font-size:11px;transition:transform .2s ease;
+  .region-count-chip{
+    background:var(--panel-text);color:var(--panel);
+    font-size:11px;padding:4px 10px;border-radius:999px;
+    flex:none;transition:opacity .2s ease;
   }
-  .side-group-header.collapsed .chev{transform:rotate(-90deg);}
+  .side-group-header.collapsed .region-count-chip{opacity:.6;}
   .region-group{
     overflow:hidden;max-height:400px;transition:max-height .25s ease;
   }
@@ -302,7 +304,7 @@
     <div class="side-panel-head"><span>메뉴</span><button id="sidebarClose" aria-label="닫기">✕</button></div>
     <div class="side-item active" data-region="__ALL__">전체 <small id="allCount"></small></div>
     <button class="side-group-header" id="eastSeaToggle" aria-expanded="true">
-      <span>동해 바다</span><span class="chev">⌄</span>
+      <span>동해 바다</span><span class="region-count-chip" id="regionCountChip"></span>
     </button>
     <div class="region-group" id="regionList">
       <div class="side-item" data-region="gosung">고성</div>
@@ -421,6 +423,9 @@
 
     var groupHeader = document.getElementById("eastSeaToggle");
     var regionGroup = document.getElementById("regionList");
+    var regionCount = regionGroup.querySelectorAll(".side-item").length;
+    document.getElementById("regionCountChip").textContent = "지역 " + regionCount;
+
     groupHeader.addEventListener("click", function(){
       var collapsed = regionGroup.classList.toggle("collapsed");
       groupHeader.classList.toggle("collapsed", collapsed);
