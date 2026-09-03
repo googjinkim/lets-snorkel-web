@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F3F7F6;
+    --panel:#0C2B3A;
+    --panel-line:#1B4557;
+    --panel-text:#D9EAEE;
+    --panel-text-dim:#7FA3AF;
+    --accent:#137D8C;
+    --accent-strong:#0B5661;
+    --text:#152229;
+    --text-mute:#5C6E74;
+    --line:#DCE6E4;
+    --card:#FFFFFF;
+    --good:#1E8E5A;
+    --mid:#C98A12;
+    --warn:#D65C43;
+    --radius:10px;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Noto Sans KR",-apple-system,sans-serif;
+    min-height:100vh;
+  }
+  ::selection{background:var(--accent);color:#fff;}
+  a{color:inherit;}
+  button{font-family:inherit;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+  .mono{font-family:"IBM Plex Mono",monospace;}
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky;top:0;z-index:20;
+    background:var(--panel);
+    border-bottom:1px solid var(--panel-line);
+    display:flex;align-items:center;gap:18px;
+    padding:14px 20px;
+  }
+  .brand{
+    display:flex;align-items:baseline;gap:8px;
+    font-family:"Space Grotesk",sans-serif;
+    color:#fff;font-weight:700;font-size:19px;
+    white-space:nowrap;cursor:pointer;
+    background:none;border:none;padding:0;
+  }
+  .brand span{
+    font-family:"Noto Sans KR",sans-serif;
+    font-weight:400;font-size:12px;color:var(--panel-text-dim);
+  }
+  .search-form{
+    flex:1;display:flex;max-width:560px;
+    background:#0A2330;border:1px solid var(--panel-line);
+    border-radius:999px;overflow:hidden;
+  }
+  .search-form input{
+    flex:1;border:none;background:transparent;color:#fff;
+    padding:10px 16px;font-size:14px;font-family:inherit;
+  }
+  .search-form input::placeholder{color:var(--panel-text-dim);}
+  .search-form input:focus{outline:none;}
+  .search-form button{
+    border:none;background:var(--accent);color:#fff;
+    padding:0 20px;font-size:13px;font-weight:500;cursor:pointer;
+  }
+  .search-form button:hover{background:var(--accent-strong);}
+
+  /* ---------- layout ---------- */
+  .layout{display:flex;align-items:flex-start;}
+
+  aside{
+    width:172px;flex:none;
+    background:var(--panel);color:var(--panel-text);
+    min-height:calc(100vh - 57px);
+    padding:18px 0;
+    position:sticky;top:57px;
+  }
+  .side-label{
+    font-size:11px;color:var(--panel-text-dim);
+    padding:0 20px 10px;letter-spacing:.02em;
+  }
+  .side-item{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:9px 20px;font-size:14px;cursor:pointer;
+    border-left:3px solid transparent;
+    color:var(--panel-text);
+  }
+  .side-item:hover{background:#0F3646;}
+  .side-item.active{
+    border-left-color:var(--accent);
+    background:#0F3646;
+    font-weight:500;color:#fff;
+  }
+  .side-item small{color:var(--panel-text-dim);font-size:11px;}
+
+  main{flex:1;min-width:0;padding:22px 26px 60px;}
+
+  .page-title{
+    display:flex;align-items:baseline;gap:10px;margin-bottom:4px;flex-wrap:wrap;
+  }
+  .page-title h1{
+    font-size:20px;margin:0;font-weight:700;
+  }
+  .page-title .count{color:var(--text-mute);font-size:13px;}
+  .page-sub{color:var(--text-mute);font-size:13px;margin:0 0 18px;}
+
+  .legend{
+    display:flex;gap:14px;flex-wrap:wrap;color:var(--text-mute);
+    font-size:12px;margin-bottom:18px;
+  }
+
+  /* ---------- location row ---------- */
+  .location{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    margin-bottom:14px;
+    overflow:hidden;
+  }
+  .location-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:13px 18px;border-bottom:1px solid var(--line);
+    gap:10px;flex-wrap:wrap;
+  }
+  .location-name{font-size:15px;font-weight:700;}
+  .location-area{
+    font-size:11px;color:var(--accent-strong);
+    background:#E6F3F2;padding:2px 9px;border-radius:999px;margin-left:8px;
+  }
+  .no-khoa-tag{
+    font-size:11px;color:var(--text-mute);
+  }
+  .detail-btn{
+    border:1px solid var(--accent);color:var(--accent-strong);
+    background:#fff;border-radius:7px;padding:6px 14px;
+    font-size:12.5px;cursor:pointer;font-weight:500;
+  }
+  .detail-btn:hover{background:var(--accent);color:#fff;}
+
+  .day-block{padding:12px 18px;border-bottom:1px solid var(--line);}
+  .day-block:last-child{border-bottom:none;}
+  .day-label{font-size:12px;color:var(--text-mute);margin-bottom:8px;font-weight:500;}
+
+  .slots{display:flex;gap:8px;flex-wrap:wrap;}
+  .slot{
+    flex:1 1 108px;min-width:104px;
+    border:1px solid var(--line);border-radius:8px;
+    padding:8px 10px;
+  }
+  .slot .t{font-size:12px;color:var(--text-mute);margin-bottom:4px;}
+  .slot .row1{display:flex;align-items:center;justify-content:space-between;}
+  .slot .score{font-size:16px;font-weight:600;}
+  .score.good, td .score.good{color:var(--good);}
+  .score.mid, td .score.mid{color:var(--mid);}
+  .score.warn, td .score.warn{color:var(--warn);}
+  .slot .metrics{
+    margin-top:4px;font-size:11.5px;color:var(--text-mute);
+    display:flex;gap:8px;
+  }
+  .slot.empty{color:var(--text-mute);font-size:12px;display:flex;align-items:center;justify-content:center;}
+
+  /* ---------- detail view ---------- */
+  .back-link{
+    display:inline-flex;align-items:center;gap:6px;
+    color:var(--accent-strong);font-size:13px;cursor:pointer;
+    margin-bottom:14px;background:none;border:none;padding:0;font-weight:500;
+  }
+  .back-link:hover{text-decoration:underline;}
+
+  .hour-day{margin-bottom:20px;}
+  .hour-day h2{font-size:14px;margin:0 0 8px;color:var(--text-mute);font-weight:500;}
+  table.hours{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+  table.hours th{
+    text-align:left;font-size:11px;color:var(--text-mute);font-weight:500;
+    padding:8px 10px;border-bottom:1px solid var(--line);background:#FAFCFB;
+  }
+  table.hours td{
+    padding:7px 10px;border-bottom:1px solid var(--line);font-size:13px;
+  }
+  table.hours tr:last-child td{border-bottom:none;}
+  .reason-cell{color:var(--text-mute);font-size:12px;}
+
+  /* ---------- states ---------- */
+  .empty-state{
+    padding:50px 20px;text-align:center;color:var(--text-mute);
+    border:1px dashed var(--line);border-radius:var(--radius);
+  }
+  .loading{padding:40px 20px;color:var(--text-mute);font-size:13px;}
+
+  /* ---------- mobile: hamburger + off-canvas sidebar ---------- */
+  .menu-toggle{
+    display:none;background:none;border:none;color:#fff;
+    font-size:20px;line-height:1;cursor:pointer;padding:4px 6px;
+  }
+  .side-panel-head{
+    display:none;align-items:center;justify-content:space-between;
+    padding:0 20px 14px;color:#fff;font-weight:700;font-size:15px;
+  }
+  .side-panel-head button{
+    background:none;border:none;color:var(--panel-text-dim);
+    font-size:18px;cursor:pointer;padding:4px;
+  }
+  .sidebar-overlay{
+    display:none;position:fixed;inset:0;background:rgba(6,20,28,.55);z-index:55;
+  }
+  .sidebar-overlay.show{display:block;}
+
+  /* ---------- mobile: summary list ---------- */
+  .summary-row{
+    display:flex;align-items:center;gap:10px;
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:13px 16px;margin-bottom:8px;cursor:pointer;
+  }
+  .summary-row:active{background:#F3FAF9;}
+  .summary-info{display:flex;flex-direction:column;gap:5px;min-width:0;flex:1;}
+  .summary-info .location-area{align-self:flex-start;margin-left:0;}
+  .summary-slot{
+    display:flex;flex-direction:column;align-items:center;flex:none;padding:0 4px;
+  }
+  .summary-slot .label{font-size:10px;color:var(--text-mute);}
+  .summary-slot .time{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--text-mute);}
+  .summary-score{display:flex;align-items:center;gap:8px;flex:none;}
+  .summary-score .score{font-size:16px;font-weight:600;}
+  .summary-score .chev{color:var(--text-mute);font-size:18px;}
+  .summary-wave{
+    font-size:12px;color:var(--text-mute);background:#EEF4F3;
+    padding:3px 7px;border-radius:6px;
+  }
+
+  @media (max-width:720px){
+    .menu-toggle{display:inline-flex;align-items:center;}
+    .side-panel-head{display:flex;}
+    .side-label{display:none;}
+
+    aside{
+      position:fixed;top:0;left:0;bottom:0;
+      width:230px;min-height:100vh;
+      padding:20px 0;
+      transform:translateX(-100%);
+      transition:transform .22s ease;
+      z-index:60;overflow-y:auto;
+    }
+    aside.open{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,.35);}
+
+    .layout{flex-direction:column;}
+    main{padding:16px;}
+    .brand span{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <button class="menu-toggle" id="menuToggle" aria-label="지역 메뉴 열기">☰</button>
+  <button class="brand" id="brandBtn" title="홈으로">🤿 Let's Snorkel<span>동해안 스노클 컨디션</span></button>
+  <form class="search-form" id="searchForm">
+    <input type="text" id="searchInput" placeholder="포인트/지역 이름으로 검색 (예: 남애, 속초, 울진)" autocomplete="off">
+    <button type="submit">검색</button>
+  </form>
+</header>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="layout">
+  <aside>
+    <div class="side-panel-head"><span>동해 바다</span><button id="sidebarClose" aria-label="닫기">✕</button></div>
+    <div class="side-label">동해 바다</div>
+    <div class="side-item active" data-region="__ALL__">전체 <small id="allCount"></small></div>
+    <div id="regionList"></div>
+  </aside>
+
+  <main id="main">
+    <div class="loading">불러오는 중…</div>
+  </main>
+</div>
+
+<script>
+  // ⚠️ 배포한 새 Apps Script API 프로젝트의 /exec 웹앱 URL을 여기에 붙여넣으세요.
+  // 예: "https://script.google.com/macros/s/AKfycb.../exec"
+  var API_BASE_URL = "https://script.google.com/macros/s/AKfycbzWCuF_nPjkCopDs_cAuDuJX8Mjbh2dh8uPAIxOS_xRZ75IgQQX2r27LhcgEvDdvBkg/exec";
+
+  var INITIAL_LOCATION_ID = new URLSearchParams(window.location.search).get("id") || "";
+
+  var state = { view: "home", regionId: "__ALL__" };
+
+  function callApi(action, params, onSuccess, onError){
+    var url = API_BASE_URL + "?action=" + encodeURIComponent(action);
+    if (params) {
+      Object.keys(params).forEach(function(k){
+        url += "&" + encodeURIComponent(k) + "=" + encodeURIComponent(params[k]);
+      });
+    }
+    fetch(url)
+      .then(function(res){ return res.json(); })
+      .then(function(data){
+        if (data && data.error) throw new Error(data.error);
+        onSuccess(data);
+      })
+      .catch(function(err){
+        console.error(err);
+        if (onError) {
+          onError(err);
+        } else {
+          document.getElementById("main").innerHTML =
+            emptyStateHtml("데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요. (" + err.message + ")");
+        }
+      });
+  }
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  function setActiveSide(regionId){
+    document.querySelectorAll(".side-item").forEach(function(el){
+      el.classList.toggle("active", el.getAttribute("data-region") === regionId);
+    });
+  }
+
+  function scoreClass(score){
+    if (score === null || typeof score === "undefined") return "";
+    if (score >= 80) return "good";
+    if (score >= 65) return "mid";
+    return "warn";
+  }
+
+  function isMobileView(){
+    return window.matchMedia("(max-width:720px)").matches;
+  }
+
+  function bestBlockOf(blocks){
+    var withScore = (blocks || []).filter(function(b){
+      return b.score !== null && typeof b.score !== "undefined";
+    });
+    if (!withScore.length) return null;
+    return withScore.slice().sort(function(a, b){ return b.score - a.score; })[0];
+  }
+
+  /* ---------- 모바일 사이드바 (햄버거) ---------- */
+  var asideEl = document.querySelector("aside");
+  var menuToggleBtn = document.getElementById("menuToggle");
+  var sidebarOverlayEl = document.getElementById("sidebarOverlay");
+  var sidebarCloseBtn = document.getElementById("sidebarClose");
+
+  function openSidebar(){
+    asideEl.classList.add("open");
+    sidebarOverlayEl.classList.add("show");
+  }
+  function closeSidebar(){
+    asideEl.classList.remove("open");
+    sidebarOverlayEl.classList.remove("show");
+  }
+  menuToggleBtn.addEventListener("click", openSidebar);
+  sidebarOverlayEl.addEventListener("click", closeSidebar);
+  sidebarCloseBtn.addEventListener("click", closeSidebar);
+
+  /* ---------- init: sidebar ---------- */
+  function initSidebar(){
+    callApi("regions", null, function(regions){
+      var html = "";
+      regions.forEach(function(r){
+        html += '<div class="side-item" data-region="' + esc(r.id) + '">' + esc(r.name) + '</div>';
+      });
+      document.getElementById("regionList").innerHTML = html;
+      document.querySelectorAll(".side-item").forEach(function(el){
+        el.addEventListener("click", function(){
+          var regionId = el.getAttribute("data-region");
+          document.getElementById("searchInput").value = "";
+          setActiveSide(regionId);
+          closeSidebar();
+          if (regionId === "__ALL__") {
+            renderHome();
+          } else {
+            loadRegion(regionId);
+          }
+        });
+      });
+    });
+  }
+
+  document.getElementById("brandBtn").addEventListener("click", function(){
+    document.getElementById("searchInput").value = "";
+    setActiveSide("__ALL__");
+    renderHome();
+  });
+
+  document.getElementById("searchForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    var q = document.getElementById("searchInput").value.trim();
+    if (!q) return;
+    setActiveSide("__NONE__");
+    loadSearch(q);
+  });
+
+  /* ---------- home (오늘) ---------- */
+  var lastHomeData = null;
+
+  function renderHome(){
+    state.view = "home";
+    document.getElementById("main").innerHTML = '<div class="loading">오늘 데이터를 불러오는 중…</div>';
+    callApi("today", null, function(data){
+      lastHomeData = data;
+      drawHome();
+    });
+  }
+
+  function drawHome(){
+    var data = lastHomeData;
+    if (!data) return;
+    state.view = "home";
+
+    var html = '<div class="page-title"><h1>오늘의 동해안 바다 상황</h1>' +
+      '<span class="count">' + esc(data.todayLabel) + ' · ' + data.locations.length + '개 포인트</span></div>' +
+      legendHtml();
+
+    if (!data.locations.length) {
+      document.getElementById("main").innerHTML = html + emptyStateHtml("표시할 데이터가 없습니다.");
+      return;
+    }
+
+    if (isMobileView()) {
+      html += data.locations.map(function(loc){
+        return summaryRowHtml(loc, bestBlockOf(loc.blocks));
+      }).join("");
+      document.getElementById("main").innerHTML = html;
+      bindSummaryRows("home");
+    } else {
+      html += data.locations.map(function(loc){ return locationRowHtml(loc, false); }).join("");
+      document.getElementById("main").innerHTML = html;
+      bindDetailButtons(drawHome);
+    }
+  }
+
+  /* ---------- search / region (이번주) ---------- */
+  var lastResultsData = null;
+
+  function renderResultsPage(title, sub, results){
+    lastResultsData = { title: title, sub: sub, results: results };
+    state.view = "results";
+    drawResults();
+  }
+
+  function drawResults(){
+    var data = lastResultsData;
+    if (!data) return;
+    state.view = "results";
+
+    var html = '<div class="page-title"><h1>' + esc(data.title) + '</h1>' +
+      '<span class="count">' + data.results.length + '개 포인트</span></div>' +
+      (data.sub ? '<p class="page-sub">' + esc(data.sub) + '</p>' : "") +
+      legendHtml();
+
+    if (!data.results.length) {
+      html += emptyStateHtml("일치하는 바다 포인트가 없습니다. 지역명이나 포인트 이름으로 다시 검색해보세요.");
+      document.getElementById("main").innerHTML = html;
+      return;
+    }
+
+    if (isMobileView()) {
+      html += data.results.map(function(loc){
+        var todayBlocks = (loc.days && loc.days.length) ? loc.days[0].blocks : [];
+        return summaryRowHtml(loc, bestBlockOf(todayBlocks));
+      }).join("");
+      document.getElementById("main").innerHTML = html;
+      bindSummaryRows("results");
+    } else {
+      html += data.results.map(function(loc){ return locationRowHtml(loc, true); }).join("");
+      document.getElementById("main").innerHTML = html;
+      bindDetailButtons(drawResults);
+    }
+  }
+
+  function loadSearch(query){
+    document.getElementById("main").innerHTML = '<div class="loading">검색 중…</div>';
+    callApi("search", { q: query }, function(data){
+      renderResultsPage('"' + query + '" 검색 결과', "이번 주 데이터 (오늘 포함, 4시간 단위)", data.results);
+    });
+  }
+
+  function loadRegion(regionId){
+    document.getElementById("main").innerHTML = '<div class="loading">불러오는 중…</div>';
+    callApi("region", { id: regionId }, function(data){
+      renderResultsPage(data.regionName, "이번 주 데이터 (오늘 포함, 4시간 단위)", data.results);
+    });
+  }
+
+  /* ---------- 모바일 요약 → 확장(오늘/이번주 블록) ---------- */
+  function bindSummaryRows(kind){
+    document.querySelectorAll(".summary-row").forEach(function(row){
+      row.addEventListener("click", function(){
+        var id = row.getAttribute("data-id");
+        var loc;
+        if (kind === "home") {
+          loc = (lastHomeData.locations || []).find(function(l){ return l.id === id; });
+        } else {
+          loc = (lastResultsData.results || []).find(function(l){ return l.id === id; });
+        }
+        if (loc) renderLocationExpanded(loc, kind);
+      });
+    });
+  }
+
+  function renderLocationExpanded(loc, kind){
+    state.view = "expanded";
+    var backLabel = kind === "home" ? "오늘 목록으로" : "목록으로";
+    var html = '<button class="back-link" id="backBtn">← ' + backLabel + '</button>' +
+      locationRowHtml(loc, kind === "results");
+    document.getElementById("main").innerHTML = html;
+    bindDetailButtons(function(){ renderLocationExpanded(loc, kind); });
+    document.getElementById("backBtn").addEventListener("click", function(){
+      if (kind === "home") { drawHome(); } else { drawResults(); }
+    });
+  }
+
+  /* ---------- 자세히 보기 (1시간 단위) ---------- */
+  function loadDetail(locationId, returnFn){
+    state.view = "detail";
+    document.getElementById("main").innerHTML = '<div class="loading">상세 데이터를 불러오는 중…</div>';
+    callApi("detail", { id: locationId }, function(data){
+      if (!data) {
+        document.getElementById("main").innerHTML = emptyStateHtml("해당 포인트를 찾을 수 없습니다.");
+        return;
+      }
+      var html = '<button class="back-link" id="backBtn">← 목록으로</button>' +
+        '<div class="page-title"><h1>' + esc(data.name) + '</h1>' +
+        '<span class="count">1시간 단위 · 이번 주</span></div>';
+
+      if (!data.hasKhoaMapping) {
+        html += '<p class="page-sub">이 포인트는 인근 KHOA 실측 관측소가 없어 예보(Open-Meteo) 데이터만 제공됩니다.</p>';
+      }
+
+      data.days.forEach(function(day){
+        html += '<div class="hour-day"><h2>' + esc(day.dateLabel) + '</h2>' +
+          '<table class="hours"><thead><tr>' +
+          '<th>시간</th><th>점수</th><th>파고</th><th>너울</th><th>수온</th><th>날씨</th><th>코멘트</th>' +
+          '</tr></thead><tbody>' +
+          day.hours.map(function(h){
+            return '<tr>' +
+              '<td class="mono">' + esc(h.time) + '</td>' +
+              '<td>' + h.scoreIcon + ' <span class="mono score ' + scoreClass(h.score) + '">' + (h.score === null ? "-" : h.score) + '</span></td>' +
+              '<td class="mono">' + (h.wave === null ? "-" : h.wave + "m") + '</td>' +
+              '<td class="mono">' + (h.swell === null ? "-" : h.swell + "m") + '</td>' +
+              '<td class="mono">' + (h.temp === null ? "-" : h.temp + "℃") + '</td>' +
+              '<td>' + h.weatherIcon + '</td>' +
+              '<td class="reason-cell">' + esc(h.reason) + '</td>' +
+              '</tr>';
+          }).join("") +
+          '</tbody></table></div>';
+      });
+
+      document.getElementById("main").innerHTML = html;
+      document.getElementById("backBtn").addEventListener("click", function(){
+        if (returnFn) { returnFn(); } else { renderHome(); }
+      });
+    });
+  }
+
+  function bindDetailButtons(returnFn){
+    document.querySelectorAll("[data-detail-id]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        loadDetail(btn.getAttribute("data-detail-id"), returnFn);
+      });
+    });
+  }
+
+  /* ---------- 화면 크기 전환 시 홈/목록 화면 다시 그리기 ---------- */
+  var resizeTimer = null;
+  window.addEventListener("resize", function(){
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      if (state.view === "home") drawHome();
+      if (state.view === "results") drawResults();
+    }, 200);
+  });
+
+  /* ---------- html builders ---------- */
+  function legendHtml(){
+    return '<div class="legend">' +
+      '<span>🟢 최고(90+)</span><span>🔵 좋음(80+)</span><span>🟡 보통(65+)</span>' +
+      '<span>🟠 주의(50+)</span><span>🔴 비추천</span></div>';
+  }
+
+  function emptyStateHtml(msg){
+    return '<div class="empty-state">' + esc(msg) + '</div>';
+  }
+
+  function summaryRowHtml(loc, best){
+    var scoreCls = best ? scoreClass(best.score) : "";
+    var scoreText = best ? (best.scoreIcon + ' ' + best.score) : "-";
+    var weather = best ? best.weatherIcon : "";
+    var waveText = (best && best.wave !== null && typeof best.wave !== "undefined")
+      ? ('↗' + best.wave + 'm') : "";
+    var bestSlotChipHtml = best
+      ? ('<div class="summary-slot"><span class="label">오늘 최고</span>' +
+         '<span class="time">' + best.startHour + '~' + best.endHour + '시</span></div>')
+      : "";
+
+    return '<div class="summary-row" data-id="' + esc(loc.id) + '">' +
+      '<div class="summary-info">' +
+      '<span class="location-name">' + esc(loc.name) + '</span>' +
+      '<span class="location-area">' + esc(loc.area) +
+      (loc.hasKhoaMapping === false ? ' · 예보 전용' : '') + '</span>' +
+      '</div>' +
+      bestSlotChipHtml +
+      '<div class="summary-score">' +
+      '<span class="score ' + scoreCls + '">' + scoreText + '</span>' +
+      (waveText ? '<span class="summary-wave mono">' + waveText + '</span>' : '') +
+      '<span>' + weather + '</span>' +
+      '<span class="chev">›</span>' +
+      '</div></div>';
+  }
+
+  function slotHtml(b){
+    return '<div class="slot">' +
+      '<div class="t">' + esc(b.dateLabel ? b.dateLabel + " " : "") + b.startHour + '~' + b.endHour + '시</div>' +
+      '<div class="row1"><span class="score ' + scoreClass(b.score) + '">' + b.scoreIcon + ' ' + (b.score === null ? "-" : b.score) + '</span>' +
+      '<span>' + b.weatherIcon + '</span></div>' +
+      '<div class="metrics mono"><span>↗' + (b.wave === null ? "-" : b.wave) + 'm</span>' +
+      '<span>💧' + (b.temp === null ? "-" : b.temp) + '℃</span></div>' +
+      '</div>';
+  }
+
+  function locationRowHtml(loc, showDays){
+    var head = '<div class="location-head">' +
+      '<div><span class="location-name">' + esc(loc.name) + '</span>' +
+      '<span class="location-area">' + esc(loc.area) + '</span>' +
+      (loc.hasKhoaMapping === false ? ' <span class="no-khoa-tag">· 예보 전용</span>' : "") +
+      '</div>' +
+      '<button class="detail-btn" data-detail-id="' + esc(loc.id) + '">자세히 보기</button>' +
+      '</div>';
+
+    var body;
+    if (showDays) {
+      if (!loc.days || !loc.days.length) {
+        body = '<div class="day-block"><div class="day-label">데이터 없음</div></div>';
+      } else {
+        body = loc.days.map(function(day){
+          return '<div class="day-block">' +
+            '<div class="day-label">' + esc(day.dateLabel) + '</div>' +
+            '<div class="slots">' + day.blocks.map(slotHtml).join("") + '</div>' +
+            '</div>';
+        }).join("");
+      }
+    } else {
+      var blocks = loc.blocks || [];
+      body = '<div class="day-block"><div class="slots">' +
+        (blocks.length ? blocks.map(slotHtml).join("") : '<div class="slot empty">오늘 데이터 없음</div>') +
+        '</div></div>';
+    }
+
+    return '<div class="location">' + head + body + '</div>';
+  }
+
+  /* ---------- boot ---------- */
+  initSidebar();
+  if (INITIAL_LOCATION_ID) {
+    loadDetail(INITIAL_LOCATION_ID);
+  } else {
+    renderHome();
+  }
+</script>
+</body>
+</html>
